@@ -1,0 +1,30 @@
+<!DOCTYPE html><html><head>
+  <title>Simple Chatbot</title>
+  <link rel="stylesheet" href="/styles.css">
+</head><body>
+  <h1>Chatbot AI</h1>
+  <div id="chat-box"></div>
+  <form id="chat-form">
+    <input type="text" id="message-input" placeholder="Ketik pesan..." required />
+    <button type="submit">Kirim</button>
+  </form>
+  <script>
+    const form = document.getElementById('chat-form');
+    const input = document.getElementById('message-input');
+    const chatBox = document.getElementById('chat-box');
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const userMsg = input.value;
+      chatBox.innerHTML += `<div class='user'>🧑: ${userMsg}</div>`;
+      input.value = '';
+      const res = await fetch('/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: userMsg })
+      });
+      const data = await res.json();
+      chatBox.innerHTML += `<div class='ai'>🤖: ${data.reply}</div>`;
+      chatBox.scrollTop = chatBox.scrollHeight;
+    });
+  </script>
+</body></html>
